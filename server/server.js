@@ -9,11 +9,15 @@ import patientRoutes from "./routes/patientRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
 import medicalRecordRoutes from "./routes/medicalRecordRoutes.js";
 import prescriptionRoutes from "./routes/prescriptionRoutes.js";
+import { initCronJobs } from "./jobs/reminderJob.js";
 
 dotenv.config();
 connectDB();
 
 const app = express();
+
+// Initialize background jobs
+initCronJobs();
 
 app.use(
   cors({
