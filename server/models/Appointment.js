@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 const appointmentSchema = new mongoose.Schema(
   {
-    customerId: {
+    patientId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    businessId: {
+    doctorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -18,8 +18,8 @@ const appointmentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "paid", "cancelled"],
-      default: "pending",
+      enum: ["Pending", "Confirmed", "Completed", "Cancelled"],
+      default: "Pending",
     },
     notes: {
       type: String,
