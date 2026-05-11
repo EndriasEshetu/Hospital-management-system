@@ -16,7 +16,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("customer");
+  const [role, setRole] = useState("patient");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -173,8 +173,9 @@ const Register = () => {
                 onChange={(e) => setRole(e.target.value)}
                 className="w-full px-3 py-2.5 bg-[#111827] border border-gray-700 rounded-md focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-sm text-gray-200 transition-colors appearance-none"
               >
-                <option value="customer">Customer</option>
-                <option value="admin">Business / Admin</option>
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+                <option value="admin">Administrator</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-400">
                 <ChevronDown className="w-4 h-4" />
