@@ -2,15 +2,15 @@ import Appointment from "../models/Appointment.js";
 import User from "../models/User.js";
 import { sendReminderEmail } from "../services/emailService.js";
 
-// @desc    Get all appointments for the logged-in business admin
-// @route   GET /api/appointments/business
-// @access  Private / Admin
-export const getBusinessAppointments = async (req, res) => {
+// @desc    Get all appointments for the logged-in doctor
+// @route   GET /api/appointments/doctor
+// @access  Private / Doctor
+export const getDoctorAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find({
-      businessId: req.user._id,
+      doctorId: req.user._id,
     })
-      .populate("customerId", "name email") // populate customer info
+      .populate("patientId", "name email") // populate patient info
       .sort({ appointmentDateTime: 1 }); // upcoming first
 
     res.json(appointments);
@@ -22,11 +22,11 @@ export const getBusinessAppointments = async (req, res) => {
 
 // @desc    Update the status of an appointment
 // @route   PUT /api/appointments/:id/status
-// @access  Private / Admin
+// @access  Private / Doctor
 export const updateAppointmentStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    const allowedStatuses = ["pending", "confirmed", "paid", "cancelled"];
+    const allowedStatuses = ["Pending", "Confirmed", "Completed", "Cancelled"];
 
     if (!status || !allowedStatuses.includes(status)) {
       return res.status(400).json({
@@ -40,8 +40,8 @@ export const updateAppointmentStatus = async (req, res) => {
       return res.status(404).json({ message: "Appointment not found" });
     }
 
-    // Make sure this appointment belongs to the logged-in business
-    if (appointment.businessId.toString() !== req.user._id.toString()) {
+    // Make sure this appointment belongs to the logged-in doctor
+    if (appointment.doctorId.toString() !== req.user._id.toString()) {
       return res
         .status(403)
         .json({ message: "Not authorized to update this appointment" });
@@ -50,8 +50,7 @@ export const updateAppointmentStatus = async (req, res) => {
     appointment.status = status;
     const updated = await appointment.save();
 
-    // Re-populate customer info before sending back
-    await updated.populate("customerId", "name email");
+    await updated.populate("patientId", "name email");
 
     res.json(updated);
   } catch (error) {
@@ -61,20 +60,20 @@ export const updateAppointmentStatus = async (req, res) => {
 };
 
 // ════════════════════════════════════════════════════════════
-//  CUSTOMER CONTROLLERS
+//  PATIENT CONTROLLERS
 // ════════════════════════════════════════════════════════════
 
-// @desc    Create a new appointment (customer books a slot)
+// @desc    Create a new appointment (patient books a slot)
 // @route   POST /api/appointments
-// @access  Private (customer)
+// @access  Private (Patient)
 export const createAppointment = async (req, res) => {
   try {
-    const { businessId, appointmentDateTime, notes } = req.body;
+    const { doctorId, appointmentDateTime, notes } = req.body;
 
-    if (!businessId || !appointmentDateTime) {
+    if (!doctorId || !appointmentDateTime) {
       return res
         .status(400)
-        .json({ message: "businessId and appointmentDateTime are required" });
+        .json({ message: "doctorId and appointmentDateTime are required" });
     }
 
     const parsedDateTime = new Date(appointmentDateTime);
@@ -82,12 +81,10 @@ export const createAppointment = async (req, res) => {
       return res.status(400).json({ message: "Invalid appointmentDateTime" });
     }
 
-    // Prevent double-booking: check if same business already has
-    // an appointment at the exact same DateTime that is NOT cancelled
     const conflict = await Appointment.findOne({
-      businessId,
+      doctorId,
       appointmentDateTime: parsedDateTime,
-      status: { $ne: "cancelled" },
+      status: { $ne: "Cancelled" },
     });
 
     if (conflict) {
@@ -97,14 +94,14 @@ export const createAppointment = async (req, res) => {
     }
 
     const appointment = await Appointment.create({
-      customerId: req.user._id,
-      businessId,
+      patientId: req.user._id,
+      doctorId,
       appointmentDateTime: parsedDateTime,
-      status: "pending",
+      status: "Pending",
       notes: notes || "",
     });
 
-    await appointment.populate("businessId", "name email");
+    await appointment.populate("doctorId", "name email");
 
     res.status(201).json(appointment);
   } catch (error) {
@@ -113,15 +110,15 @@ export const createAppointment = async (req, res) => {
   }
 };
 
-// @desc    Get all appointments for logged-in customer
+// @desc    Get all appointments for logged-in patient
 // @route   GET /api/appointments/me
-// @access  Private (customer)
+// @access  Private (Patient)
 export const getMyAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find({
-      customerId: req.user._id,
+      patientId: req.user._id,
     })
-      .populate("businessId", "name email")
+      .populate("doctorId", "name email")
       .sort({ appointmentDateTime: 1 });
 
     res.json(appointments);
@@ -133,7 +130,7 @@ export const getMyAppointments = async (req, res) => {
 
 // @desc    Reschedule an appointment (change date/time)
 // @route   PUT /api/appointments/:id/reschedule
-// @access  Private (customer, owner only)
+// @access  Private (Patient, owner only)
 export const rescheduleAppointment = async (req, res) => {
   try {
     const { appointmentDateTime } = req.body;
@@ -155,25 +152,22 @@ export const rescheduleAppointment = async (req, res) => {
       return res.status(404).json({ message: "Appointment not found" });
     }
 
-    // Only the customer who owns it can reschedule
-    if (appointment.customerId.toString() !== req.user._id.toString()) {
+    if (appointment.patientId.toString() !== req.user._id.toString()) {
       return res
         .status(403)
         .json({ message: "Not authorized to reschedule this appointment" });
     }
 
-    // Cannot reschedule a cancelled appointment
-    if (appointment.status === "cancelled") {
+    if (appointment.status === "Cancelled") {
       return res
         .status(400)
         .json({ message: "Cannot reschedule a cancelled appointment" });
     }
 
-    // Check for conflicts at the new time
     const conflict = await Appointment.findOne({
-      businessId: appointment.businessId,
+      doctorId: appointment.doctorId,
       appointmentDateTime: parsedDateTime,
-      status: { $ne: "cancelled" },
+      status: { $ne: "Cancelled" },
       _id: { $ne: appointment._id },
     });
 
@@ -184,11 +178,11 @@ export const rescheduleAppointment = async (req, res) => {
     }
 
     appointment.appointmentDateTime = parsedDateTime;
-    appointment.status = "pending"; // reset to pending after reschedule
-    appointment.reminderSent = false; // reset so a new reminder is sent for the new time
+    appointment.status = "Pending"; 
+    appointment.reminderSent = false; 
     const updated = await appointment.save();
 
-    await updated.populate("businessId", "name email");
+    await updated.populate("doctorId", "name email");
     res.json(updated);
   } catch (error) {
     console.error(error);
@@ -198,7 +192,7 @@ export const rescheduleAppointment = async (req, res) => {
 
 // @desc    Cancel an appointment
 // @route   PUT /api/appointments/:id/cancel
-// @access  Private (customer, owner only)
+// @access  Private (Patient, owner only)
 export const cancelAppointment = async (req, res) => {
   try {
     const appointment = await Appointment.findById(req.params.id);
@@ -207,22 +201,22 @@ export const cancelAppointment = async (req, res) => {
       return res.status(404).json({ message: "Appointment not found" });
     }
 
-    if (appointment.customerId.toString() !== req.user._id.toString()) {
+    if (appointment.patientId.toString() !== req.user._id.toString()) {
       return res
         .status(403)
         .json({ message: "Not authorized to cancel this appointment" });
     }
 
-    if (appointment.status === "cancelled") {
+    if (appointment.status === "Cancelled") {
       return res
         .status(400)
         .json({ message: "Appointment is already cancelled" });
     }
 
-    appointment.status = "cancelled";
+    appointment.status = "Cancelled";
     const updated = await appointment.save();
 
-    await updated.populate("businessId", "name email");
+    await updated.populate("doctorId", "name email");
     res.json(updated);
   } catch (error) {
     console.error(error);

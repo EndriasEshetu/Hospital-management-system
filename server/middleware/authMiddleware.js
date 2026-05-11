@@ -43,3 +43,21 @@ export const adminOnly = (req, res, next) => {
     res.status(403).json({ message: "Not authorized as an admin" });
   }
 };
+
+// Middleware for doctor-only routes
+export const doctorOnly = (req, res, next) => {
+  if (req.user && req.user.role === "doctor") {
+    next();
+  } else {
+    res.status(403).json({ message: "Not authorized as a doctor" });
+  }
+};
+
+// Middleware for patient-only routes
+export const patientOnly = (req, res, next) => {
+  if (req.user && req.user.role === "patient") {
+    next();
+  } else {
+    res.status(403).json({ message: "Not authorized as a patient" });
+  }
+};

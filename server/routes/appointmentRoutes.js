@@ -1,24 +1,24 @@
 import express from "express";
 import {
-  getBusinessAppointments,
+  getDoctorAppointments,
   updateAppointmentStatus,
   createAppointment,
   getMyAppointments,
   rescheduleAppointment,
   cancelAppointment,
 } from "../controllers/appointmentController.js";
-import { protect, adminOnly } from "../middleware/authMiddleware.js";
+import { protect, doctorOnly, patientOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ── Customer routes ─────────────────────────────────
-router.post("/", protect, createAppointment);
-router.get("/me", protect, getMyAppointments);
-router.put("/:id/reschedule", protect, rescheduleAppointment);
-router.put("/:id/cancel", protect, cancelAppointment);
+// ── Patient routes ─────────────────────────────────
+router.post("/", protect, patientOnly, createAppointment);
+router.get("/me", protect, patientOnly, getMyAppointments);
+router.put("/:id/reschedule", protect, patientOnly, rescheduleAppointment);
+router.put("/:id/cancel", protect, patientOnly, cancelAppointment);
 
-// ── Business admin routes ───────────────────────────
-router.get("/business", protect, adminOnly, getBusinessAppointments);
-router.put("/:id/status", protect, adminOnly, updateAppointmentStatus);
+// ── Doctor routes ───────────────────────────
+router.get("/doctor", protect, doctorOnly, getDoctorAppointments);
+router.put("/:id/status", protect, doctorOnly, updateAppointmentStatus);
 
 export default router;
