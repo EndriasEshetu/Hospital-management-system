@@ -10,6 +10,8 @@ import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
 
 import DoctorLayout from "./components/DoctorLayout";
+import DoctorDashboard from "./pages/DoctorDashboard";
+import DoctorAppointments from "./pages/DoctorAppointments";
 import AvailabilityManager from "./pages/AvailabilityManager";
 
 import PatientLayout from "./components/PatientLayout";
@@ -41,8 +43,8 @@ function App() {
           <Route element={<DoctorRoute />}>
             <Route path="/doctor" element={<DoctorLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="dashboard" element={<div className="p-4 text-white">Doctor Dashboard (Coming Soon)</div>} />
-              <Route path="appointments" element={<div className="p-4 text-white">Doctor Appointments (Coming Soon)</div>} />
+              <Route path="dashboard" element={<DoctorDashboard />} />
+              <Route path="appointments" element={<DoctorAppointments />} />
               <Route path="medical-records" element={<div className="p-4 text-white">Medical Records (Coming Soon)</div>} />
               <Route path="prescriptions" element={<div className="p-4 text-white">Prescriptions (Coming Soon)</div>} />
               <Route path="availability" element={<AvailabilityManager />} />

@@ -12,8 +12,19 @@ export const createPrescription = async (req, res) => {
     const doctor = await Doctor.findOne({ userId: req.user._id });
     if (!doctor) return res.status(404).json({ message: "Doctor profile not found" });
 
+    // patientId coming from frontend (Appointment) is actually User._id. Resolve it to Patient._id.
+    let resolvedPatientId = patientId;
+    const patientProfile = await Patient.findOne({ userId: patientId });
+    if (patientProfile) {
+      resolvedPatientId = patientProfile._id;
+    } else {
+      // Check if it's already a valid patient ID
+      const existingPatient = await Patient.findById(patientId);
+      if (!existingPatient) return res.status(404).json({ message: "Patient profile not found for this user" });
+    }
+
     const prescription = await Prescription.create({
-      patientId,
+      patientId: resolvedPatientId,
       doctorId: doctor._id,
       appointmentId,
       medicines
