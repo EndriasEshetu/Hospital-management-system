@@ -3,10 +3,16 @@ import useAuthStore from "./store/useAuthStore";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Homepage from "./pages/Homepage";
+
+import { AdminRoute, DoctorRoute, PatientRoute } from "./components/RoleRoute";
+
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
+
+import DoctorLayout from "./components/DoctorLayout";
 import AvailabilityManager from "./pages/AvailabilityManager";
-import CustomerLayout from "./components/CustomerLayout";
+
+import PatientLayout from "./components/PatientLayout";
 import BookingCalendar from "./pages/BookingCalendar";
 import MyAppointments from "./pages/MyAppointments";
 
@@ -19,34 +25,36 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route
-            path="/admin"
-            element={
-              user && user.role === "admin" ? (
-                <AdminLayout />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          >
-            <Route index element={<Navigate to="dashboard" replace />} />
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="availability" element={<AvailabilityManager />} />
+          
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="patients" element={<div className="p-4 text-white">Patients Management (Coming Soon)</div>} />
+              <Route path="doctors" element={<div className="p-4 text-white">Doctors Management (Coming Soon)</div>} />
+              <Route path="appointments" element={<div className="p-4 text-white">All Appointments (Coming Soon)</div>} />
+            </Route>
           </Route>
 
-          <Route
-            path="/customer"
-            element={
-              user && user.role === "customer" ? (
-                <CustomerLayout />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          >
-            <Route index element={<Navigate to="book" replace />} />
-            <Route path="book" element={<BookingCalendar />} />
-            <Route path="my-appointments" element={<MyAppointments />} />
+          <Route element={<DoctorRoute />}>
+            <Route path="/doctor" element={<DoctorLayout />}>
+              <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<div className="p-4 text-white">Doctor Dashboard (Coming Soon)</div>} />
+              <Route path="appointments" element={<div className="p-4 text-white">Doctor Appointments (Coming Soon)</div>} />
+              <Route path="medical-records" element={<div className="p-4 text-white">Medical Records (Coming Soon)</div>} />
+              <Route path="prescriptions" element={<div className="p-4 text-white">Prescriptions (Coming Soon)</div>} />
+              <Route path="availability" element={<AvailabilityManager />} />
+            </Route>
+          </Route>
+
+          <Route element={<PatientRoute />}>
+            <Route path="/patient" element={<PatientLayout />}>
+              <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<BookingCalendar />} />
+              <Route path="appointments" element={<MyAppointments />} />
+              <Route path="records" element={<div className="p-4 text-white">My Records (Coming Soon)</div>} />
+              <Route path="prescriptions" element={<div className="p-4 text-white">My Prescriptions (Coming Soon)</div>} />
+            </Route>
           </Route>
 
           <Route
@@ -55,8 +63,10 @@ function App() {
               user ? (
                 user.role === "admin" ? (
                   <Navigate to="/admin/dashboard" />
+                ) : user.role === "doctor" ? (
+                  <Navigate to="/doctor/dashboard" />
                 ) : (
-                  <Navigate to="/customer/book" />
+                  <Navigate to="/patient/dashboard" />
                 )
               ) : (
                 <Homepage />

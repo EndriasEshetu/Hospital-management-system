@@ -1,22 +1,32 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
-import { Menu, X, Calendar, ClipboardList, LogOut } from "lucide-react";
+import { Menu, X, Calendar, ClipboardList, LogOut, LayoutDashboard, FileText, Pill } from "lucide-react";
 
 const navItems = [
   {
-    to: "/customer/book",
-    label: "Book Appointment",
+    to: "/patient/dashboard",
+    label: "Dashboard",
+    icon: <LayoutDashboard size={20} />,
+  },
+  {
+    to: "/patient/appointments",
+    label: "Appointments",
     icon: <Calendar size={20} />,
   },
   {
-    to: "/customer/my-appointments",
-    label: "My Appointments",
-    icon: <ClipboardList size={20} />,
+    to: "/patient/records",
+    label: "My Records",
+    icon: <FileText size={20} />,
+  },
+  {
+    to: "/patient/prescriptions",
+    label: "My Prescriptions",
+    icon: <Pill size={20} />,
   },
 ];
 
-const CustomerLayout = () => {
+const PatientLayout = () => {
   const { user, logout } = useAuthStore();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -39,7 +49,7 @@ const CustomerLayout = () => {
         <div className="p-6 border-b border-gray-700 flex justify-between items-center">
           <div>
             <h1 className="text-xl font-bold text-white tracking-wide">
-              My Portal
+              Patient Portal
             </h1>
             <p className="text-xs text-gray-400 mt-1 truncate max-w-45">
               {user?.name}
@@ -95,7 +105,7 @@ const CustomerLayout = () => {
             >
               <Menu size={24} />
             </button>
-            <span className="font-bold text-white">My Portal</span>
+            <span className="font-bold text-white">Patient Portal</span>
           </div>
           <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-bold">
             {user?.name?.[0].toUpperCase()}
@@ -110,4 +120,4 @@ const CustomerLayout = () => {
   );
 };
 
-export default CustomerLayout;
+export default PatientLayout;
