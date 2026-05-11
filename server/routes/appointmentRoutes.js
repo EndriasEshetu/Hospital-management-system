@@ -6,10 +6,14 @@ import {
   getMyAppointments,
   rescheduleAppointment,
   cancelAppointment,
+  getAllAppointments,
 } from "../controllers/appointmentController.js";
-import { protect, doctorOnly, patientOnly } from "../middleware/authMiddleware.js";
+import { protect, doctorOnly, patientOnly, adminOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+
+// ── Admin routes ─────────────────────────────────
+router.get("/", protect, adminOnly, getAllAppointments);
 
 // ── Patient routes ─────────────────────────────────
 router.post("/", protect, patientOnly, createAppointment);

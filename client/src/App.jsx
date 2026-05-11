@@ -8,6 +8,9 @@ import { AdminRoute, DoctorRoute, PatientRoute } from "./components/RoleRoute";
 
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminPatients from "./pages/AdminPatients";
+import AdminDoctors from "./pages/AdminDoctors";
+import AdminAppointments from "./pages/AdminAppointments";
 
 import DoctorLayout from "./components/DoctorLayout";
 import DoctorDashboard from "./pages/DoctorDashboard";
@@ -34,9 +37,9 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="patients" element={<div className="p-4 text-white">Patients Management (Coming Soon)</div>} />
-              <Route path="doctors" element={<div className="p-4 text-white">Doctors Management (Coming Soon)</div>} />
-              <Route path="appointments" element={<div className="p-4 text-white">All Appointments (Coming Soon)</div>} />
+              <Route path="patients" element={<AdminPatients />} />
+              <Route path="doctors" element={<AdminDoctors />} />
+              <Route path="appointments" element={<AdminAppointments />} />
             </Route>
           </Route>
 

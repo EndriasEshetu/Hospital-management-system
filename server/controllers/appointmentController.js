@@ -20,6 +20,23 @@ export const getDoctorAppointments = async (req, res) => {
   }
 };
 
+// @desc    Get all appointments (Admin)
+// @route   GET /api/appointments
+// @access  Private / Admin
+export const getAllAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({})
+      .populate("patientId", "name email")
+      .populate("doctorId", "name email")
+      .sort({ appointmentDateTime: -1 });
+
+    res.json(appointments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 // @desc    Update the status of an appointment
 // @route   PUT /api/appointments/:id/status
 // @access  Private / Doctor

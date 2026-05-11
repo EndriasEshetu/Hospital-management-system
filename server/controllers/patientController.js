@@ -38,3 +38,23 @@ export const updatePatient = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// @desc    Delete patient
+// @route   DELETE /api/patients/:id
+// @access  Private / Admin
+export const deletePatient = async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.params.id);
+    if (!patient) return res.status(404).json({ message: "Patient not found" });
+
+    // Also delete user
+    if (patient.userId) {
+      await User.findByIdAndDelete(patient.userId);
+    }
+    await patient.deleteOne();
+    
+    res.json({ message: "Patient removed" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
