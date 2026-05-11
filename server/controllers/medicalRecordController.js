@@ -32,9 +32,13 @@ export const createMedicalRecord = async (req, res) => {
 // @access  Private
 export const getPatientMedicalRecords = async (req, res) => {
   try {
-    const patientObjId = req.params.patientId;
+    let patientObjId = req.params.patientId;
     
-    if (req.user.role === 'patient') {
+    if (patientObjId === 'me' && req.user.role === 'patient') {
+      const patient = await Patient.findOne({ userId: req.user._id });
+      if (!patient) return res.status(404).json({ message: "Patient profile not found" });
+      patientObjId = patient._id.toString();
+    } else if (req.user.role === 'patient') {
       const patient = await Patient.findOne({ userId: req.user._id });
       if (!patient || patient._id.toString() !== patientObjId) {
          return res.status(403).json({ message: "Not authorized to view these records" });

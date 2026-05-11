@@ -15,6 +15,8 @@ import AvailabilityManager from "./pages/AvailabilityManager";
 import PatientLayout from "./components/PatientLayout";
 import BookingCalendar from "./pages/BookingCalendar";
 import MyAppointments from "./pages/MyAppointments";
+import MyRecords from "./pages/MyRecords";
+import MyPrescriptions from "./pages/MyPrescriptions";
 
 function App() {
   const { user } = useAuthStore();
@@ -52,8 +54,8 @@ function App() {
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<BookingCalendar />} />
               <Route path="appointments" element={<MyAppointments />} />
-              <Route path="records" element={<div className="p-4 text-white">My Records (Coming Soon)</div>} />
-              <Route path="prescriptions" element={<div className="p-4 text-white">My Prescriptions (Coming Soon)</div>} />
+              <Route path="records" element={<MyRecords />} />
+              <Route path="prescriptions" element={<MyPrescriptions />} />
             </Route>
           </Route>
 

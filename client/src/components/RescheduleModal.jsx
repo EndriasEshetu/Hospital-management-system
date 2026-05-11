@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRescheduleAppointment } from "../hooks/useCustomer";
+import { useRescheduleAppointment } from "../hooks/usePatient";
 
 const RescheduleModal = ({ appointment, onClose }) => {
   // Parse existing appointmentDateTime
@@ -72,9 +72,9 @@ const RescheduleModal = ({ appointment, onClose }) => {
               Current Appointment
             </p>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Business</span>
+              <span className="text-gray-400">Doctor</span>
               <span className="font-medium text-white">
-                {appointment.businessId?.name || "Unknown"}
+                Dr. {appointment.doctorId?.name || "Unknown"}
               </span>
             </div>
             <div className="flex justify-between text-sm mt-1">

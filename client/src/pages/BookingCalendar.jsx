@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
-import { useAvailableSlots } from "../hooks/useCustomer";
+import { useDoctors } from "../hooks/usePatient";
 import BookingModal from "../components/BookingModal";
 
 // Setup the localizer for react-big-calendar
@@ -17,8 +17,18 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+const dayMap = {
+  "Sunday": 0,
+  "Monday": 1,
+  "Tuesday": 2,
+  "Wednesday": 3,
+  "Thursday": 4,
+  "Friday": 5,
+  "Saturday": 6
+};
+
 const BookingCalendar = () => {
-  const { data: slots = [], isLoading, isError } = useAvailableSlots();
+  const { data: doctors = [], isLoading, isError } = useDoctors();
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -40,7 +50,7 @@ const BookingCalendar = () => {
 
   // Generate calendar events from the recurring weekly availability slots
   const events = useMemo(() => {
-    if (!slots || slots.length === 0) return [];
+    if (!doctors || doctors.length === 0) return [];
 
     const generatedEvents = [];
     const windowStart = new Date(currentDate);
@@ -52,31 +62,41 @@ const BookingCalendar = () => {
       date.setDate(windowStart.getDate() + i);
       const dayOfWeek = date.getDay();
 
-      const daySlots = slots.filter((slot) => slot.dayOfWeek === dayOfWeek);
+      doctors.forEach((doctor) => {
+        if (!doctor.availableDays || doctor.availableDays.length === 0) return;
+        
+        // check if this doctor is available on this day
+        const isAvailable = doctor.availableDays.some(d => dayMap[d] === dayOfWeek);
+        if (isAvailable) {
+          // generate slots 
+          [9, 11, 14, 16].forEach(hour => {
+            const startDate = new Date(date);
+            startDate.setHours(hour, 0, 0, 0);
 
-      daySlots.forEach((slot) => {
-        const [startHour, startMin] = slot.startTime.split(":").map(Number);
-        const [endHour, endMin] = slot.endTime.split(":").map(Number);
+            const endDate = new Date(date);
+            endDate.setHours(hour + 1, 0, 0, 0);
 
-        const startDate = new Date(date);
-        startDate.setHours(startHour, startMin, 0, 0);
-
-        const endDate = new Date(date);
-        endDate.setHours(endHour, endMin, 0, 0);
-
-        if (startDate > new Date()) {
-          generatedEvents.push({
-            title: slot.businessId?.name || "Available",
-            start: startDate,
-            end: endDate,
-            resource: slot,
+            if (startDate > new Date()) {
+              generatedEvents.push({
+                title: "Dr. " + (doctor.userId?.name || "Unknown"),
+                start: startDate,
+                end: endDate,
+                resource: {
+                  doctorId: doctor.userId?._id,
+                  doctorName: doctor.userId?.name,
+                  startTime: `${hour.toString().padStart(2, '0')}:00`,
+                  endTime: `${(hour + 1).toString().padStart(2, '0')}:00`,
+                  dayOfWeek
+                },
+              });
+            }
           });
         }
       });
     }
 
     return generatedEvents;
-  }, [slots, currentDate]);
+  }, [doctors, currentDate]);
 
   const handleNavigate = (newDate) => {
     setCurrentDate(newDate);
@@ -183,4 +203,3 @@ const BookingCalendar = () => {
 };
 
 export default BookingCalendar;
-

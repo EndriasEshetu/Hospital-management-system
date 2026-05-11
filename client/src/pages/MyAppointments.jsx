@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   useMyAppointments,
   useCancelAppointment,
-} from "../hooks/useCustomer";
+} from "../hooks/usePatient";
 import StatusBadge from "../components/StatusBadge";
 import RescheduleModal from "../components/RescheduleModal";
 
@@ -41,10 +41,10 @@ const MyAppointments = () => {
   // Split into upcoming and past
   const now = new Date();
   const upcoming = appointments.filter(
-    (a) => new Date(a.appointmentDateTime) >= now && a.status !== "cancelled"
+    (a) => new Date(a.appointmentDateTime) >= now && a.status !== "Cancelled"
   );
   const past = appointments.filter(
-    (a) => new Date(a.appointmentDateTime) < now || a.status === "cancelled"
+    (a) => new Date(a.appointmentDateTime) < now || a.status === "Cancelled"
   );
 
   return (
@@ -102,7 +102,7 @@ const MyAppointments = () => {
                     {/* Info */}
                     <div className="flex-1 space-y-1">
                       <p className="text-sm font-semibold text-white">
-                        {appt.businessId?.name || "Unknown Business"}
+                        {appt.doctorId?.name ? `Dr. ${appt.doctorId.name}` : "Unknown Doctor"}
                       </p>
                       <p className="text-sm text-gray-400">
                         {formatDateTime(appt.appointmentDateTime)}
@@ -120,11 +120,11 @@ const MyAppointments = () => {
                     {/* Actions */}
                     <div className="flex gap-2 mt-4 sm:mt-0">
                       <button
-                        onClick={() => setRescheduleTarget(appt)}
-                        className="px-4 py-2 text-xs font-medium rounded-md bg-[#111827] text-blue-400 hover:bg-blue-900/30 border border-gray-700 hover:border-blue-800 transition-colors"
-                      >
-                        Reschedule
-                      </button>
+                         onClick={() => setRescheduleTarget(appt)}
+                         className="px-4 py-2 text-xs font-medium rounded-md bg-[#111827] text-blue-400 hover:bg-blue-900/30 border border-gray-700 hover:border-blue-800 transition-colors"
+                       >
+                         Reschedule
+                       </button>
                       <button
                         onClick={() => handleCancel(appt._id)}
                         disabled={cancelMutation.isPending}
@@ -153,7 +153,7 @@ const MyAppointments = () => {
                   >
                     <div className="flex-1 space-y-1">
                       <p className="text-sm font-semibold text-gray-300">
-                        {appt.businessId?.name || "Unknown Business"}
+                        {appt.doctorId?.name ? `Dr. ${appt.doctorId.name}` : "Unknown Doctor"}
                       </p>
                       <p className="text-sm text-gray-500">
                         {formatDateTime(appt.appointmentDateTime)}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useBookAppointment } from "../hooks/useCustomer";
+import { useBookAppointment } from "../hooks/usePatient";
 
 const BookingModal = ({ slot, selectedDate, onClose }) => {
   const [notes, setNotes] = useState("");
@@ -12,7 +12,7 @@ const BookingModal = ({ slot, selectedDate, onClose }) => {
 
     bookMutation.mutate(
       {
-        businessId: slot.businessId._id,
+        doctorId: slot.doctorId,
         appointmentDateTime,
         notes,
       },
@@ -53,9 +53,9 @@ const BookingModal = ({ slot, selectedDate, onClose }) => {
           {/* Appointment summary */}
           <div className="space-y-3 bg-[#111827] p-4 rounded-lg border border-gray-800">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Business</span>
+              <span className="text-gray-400">Doctor</span>
               <span className="font-medium text-white">
-                {slot.businessId?.name || "Unknown"}
+                Dr. {slot.doctorName || "Unknown"}
               </span>
             </div>
             <div className="flex justify-between text-sm">
