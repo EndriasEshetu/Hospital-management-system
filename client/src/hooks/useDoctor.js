@@ -19,6 +19,9 @@ export const useUpdateAppointmentStatus = () => {
     mutationFn: updateAppointmentStatus,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["doctorAppointments"] });
+      queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["adminAppointments"] });
+      queryClient.invalidateQueries({ queryKey: ["myAppointments"] });
     },
   });
 };

@@ -7,6 +7,7 @@ import availabilityRoutes from "./routes/availabilityRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
 import patientRoutes from "./routes/patientRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import medicalRecordRoutes from "./routes/medicalRecordRoutes.js";
 import prescriptionRoutes from "./routes/prescriptionRoutes.js";
 import { initCronJobs } from "./jobs/reminderJob.js";
@@ -33,6 +34,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/availability", availabilityRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/doctors", doctorRoutes);

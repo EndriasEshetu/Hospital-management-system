@@ -69,12 +69,17 @@ export const loginUser = async (req, res) => {
 
     const user = await User.findOne({ email }).select("+password");
 
+    if (user && !user.isActive) {
+      return res.status(403).json({ message: "This account is inactive" });
+    }
+
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
+        isActive: user.isActive,
         token: generateToken(user._id),
       });
     } else {

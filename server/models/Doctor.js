@@ -13,6 +13,10 @@ const doctorSchema = new mongoose.Schema(
     department: {
       type: String,
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
     availableDays: [
       {
         type: String,

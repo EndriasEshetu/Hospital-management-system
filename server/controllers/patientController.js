@@ -6,7 +6,7 @@ import User from "../models/User.js";
 // @access  Private (Admin)
 export const getPatients = async (req, res) => {
   try {
-    const patients = await Patient.find().populate("userId", "name email");
+    const patients = await Patient.find().populate("userId", "name email role isActive");
     res.json(patients);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -18,7 +18,7 @@ export const getPatients = async (req, res) => {
 // @access  Private
 export const getPatientById = async (req, res) => {
   try {
-    const patient = await Patient.findById(req.params.id).populate("userId", "name email");
+    const patient = await Patient.findById(req.params.id).populate("userId", "name email role isActive");
     if (!patient) return res.status(404).json({ message: "Patient not found" });
     res.json(patient);
   } catch (error) {
@@ -31,8 +31,20 @@ export const getPatientById = async (req, res) => {
 // @access  Private
 export const updatePatient = async (req, res) => {
   try {
-    const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const patient = await Patient.findById(req.params.id);
     if (!patient) return res.status(404).json({ message: "Patient not found" });
+
+    const { age, gender, bloodGroup, phone, address } = req.body;
+
+    if (age !== undefined) patient.age = age;
+    if (gender !== undefined) patient.gender = gender;
+    if (bloodGroup !== undefined) patient.bloodGroup = bloodGroup;
+    if (phone !== undefined) patient.phone = phone;
+    if (address !== undefined) patient.address = address;
+
+    await patient.save();
+    await patient.populate("userId", "name email role isActive");
+
     res.json(patient);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

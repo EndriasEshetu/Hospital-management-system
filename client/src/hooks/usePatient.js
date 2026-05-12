@@ -22,6 +22,8 @@ export const useBookAppointment = () => {
     mutationFn: bookAppointment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myAppointments"] });
+      queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["adminAppointments"] });
     },
   });
 };
@@ -39,6 +41,8 @@ export const useRescheduleAppointment = () => {
     mutationFn: rescheduleAppointment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myAppointments"] });
+      queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["adminAppointments"] });
     },
   });
 };
@@ -49,6 +53,8 @@ export const useCancelAppointment = () => {
     mutationFn: cancelAppointment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myAppointments"] });
+      queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["adminAppointments"] });
     },
   });
 };
