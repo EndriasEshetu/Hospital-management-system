@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
-import { Plus, Search, Pencil, Ban, X, CheckCircle2 } from "lucide-react";
+import { Plus, Search, Pencil, Ban, X, CheckCircle2, RefreshCw } from "lucide-react";
 import {
   useAllDoctors,
   useCreateDoctor,
   useUpdateDoctor,
   useDeactivateDoctor,
+  useReactivateDoctor,
 } from "../hooks/useAdmin";
 
 const DAYS = [
@@ -31,6 +32,7 @@ const ManageDoctors = () => {
   const createMutation = useCreateDoctor();
   const updateMutation = useUpdateDoctor();
   const deactivateMutation = useDeactivateDoctor();
+  const reactivateMutation = useReactivateDoctor();
 
   const [query, setQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -120,6 +122,14 @@ const ManageDoctors = () => {
       window.confirm(`Deactivate Dr. ${doctor.userId?.name || "this doctor"}?`)
     ) {
       deactivateMutation.mutate(doctor._id);
+    }
+  };
+
+  const handleReactivate = (doctor) => {
+    if (
+      window.confirm(`Reactivate Dr. ${doctor.userId?.name || "this doctor"}?`)
+    ) {
+      reactivateMutation.mutate(doctor._id);
     }
   };
 
@@ -255,14 +265,23 @@ const ManageDoctors = () => {
                             <Pencil size={14} />
                             Edit
                           </button>
-                          {isActive && (
+                          {isActive ? (
                             <button
                               onClick={() => handleDeactivate(doctor)}
                               disabled={deactivateMutation.isPending}
-                              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20"
+                              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 disabled:opacity-50"
                             >
                               <Ban size={14} />
                               Deactivate
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleReactivate(doctor)}
+                              disabled={reactivateMutation.isPending}
+                              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 disabled:opacity-50"
+                            >
+                              <RefreshCw size={14} />
+                              Reactivate
                             </button>
                           )}
                         </div>

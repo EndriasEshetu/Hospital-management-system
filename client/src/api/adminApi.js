@@ -54,3 +54,8 @@ export const updateAdminAppointment = async ({ id, status }) => {
   const { data } = await api.patch(`/appointments/${id}`, { status });
   return data;
 };
+
+export const reactivateDoctor = async (id) => {
+  const { data } = await api.patch(`/doctors/${id}/reactivate`);
+  return data;
+};

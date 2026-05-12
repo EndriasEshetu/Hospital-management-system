@@ -9,6 +9,7 @@ import {
   createDoctor,
   updateDoctor,
   deactivateDoctor,
+  reactivateDoctor,
   getAdminAppointments,
   updateAdminAppointment,
 } from "../api/adminApi";
@@ -89,6 +90,18 @@ export const useDeactivateDoctor = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deactivateDoctor,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminDoctors"] });
+      queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["doctors"] });
+    },
+  });
+};
+
+export const useReactivateDoctor = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: reactivateDoctor,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminDoctors"] });
       queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });

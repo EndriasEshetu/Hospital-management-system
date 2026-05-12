@@ -174,3 +174,27 @@ export const deactivateDoctor = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// @desc    Reactivate doctor
+// @route   PATCH /api/doctors/:id/reactivate
+// @access  Private (Admin)
+export const reactivateDoctor = async (req, res) => {
+  try {
+    const doctor = await Doctor.findById(req.params.id);
+    if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+
+    const user = await User.findById(doctor.userId);
+    if (!user)
+      return res.status(404).json({ message: "Linked user account not found" });
+
+    doctor.isActive = true;
+    user.isActive = true;
+
+    await doctor.save();
+    await user.save();
+
+    res.json({ message: "Doctor reactivated" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

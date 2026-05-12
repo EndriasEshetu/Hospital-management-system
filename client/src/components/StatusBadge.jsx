@@ -1,15 +1,15 @@
-const StatusBadge = ({ status }) => {
-  const styles = {
-    pending: "bg-yellow-900/30 text-yellow-500 border border-yellow-900/50",
-    confirmed: "bg-blue-900/30 text-blue-400 border border-blue-900/50",
-    paid: "bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/30",
-    cancelled: "bg-red-900/30 text-red-400 border border-red-900/50",
-  };
+const statusStyles = {
+  Pending:   "bg-amber-900/30 text-amber-400 border border-amber-900/50",
+  Confirmed: "bg-sky-900/30 text-sky-400 border border-sky-900/50",
+  Completed: "bg-emerald-900/30 text-emerald-400 border border-emerald-900/50",
+  Cancelled: "bg-red-900/30 text-red-400 border border-red-900/50",
+};
 
+const StatusBadge = ({ status }) => {
   return (
     <span
       className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize tracking-wide ${
-        styles[status] || "bg-gray-800 text-gray-400 border border-gray-700"
+        statusStyles[status] ?? "bg-gray-800 text-gray-400 border border-gray-700"
       }`}
     >
       {status}

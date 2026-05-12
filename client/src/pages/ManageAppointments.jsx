@@ -150,7 +150,7 @@ const ManageAppointments = () => {
             >
               <option value="">All doctors</option>
               {doctors.map((doctor) => (
-                <option key={doctor._id} value={doctor._id}>
+                <option key={doctor._id} value={doctor.userId?._id}>
                   {doctor.userId?.name || "Unknown Doctor"}
                 </option>
               ))}
