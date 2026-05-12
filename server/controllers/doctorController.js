@@ -1,7 +1,8 @@
 import Doctor from "../models/Doctor.js";
 import User from "../models/User.js";
 
-const populateDoctor = (doctor) => doctor.populate("userId", "name email role isActive");
+const populateDoctor = (doctor) =>
+  doctor.populate("userId", "name email role isActive");
 
 // @desc    Get all doctors
 // @route   GET /api/doctors
@@ -11,8 +12,16 @@ export const getDoctors = async (req, res) => {
     const query =
       req.user?.role === "admin"
         ? {}
-        : { $or: [{ isActive: { $ne: false } }, { isActive: { $exists: false } }] };
-    const doctors = await Doctor.find(query).populate("userId", "name email role isActive");
+        : {
+            $or: [
+              { isActive: { $ne: false } },
+              { isActive: { $exists: false } },
+            ],
+          };
+    const doctors = await Doctor.find(query).populate(
+      "userId",
+      "name email role isActive",
+    );
     res.json(doctors);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -24,7 +33,10 @@ export const getDoctors = async (req, res) => {
 // @access  Private / Admin
 export const getDoctorById = async (req, res) => {
   try {
-    const doctor = await Doctor.findById(req.params.id).populate("userId", "name email role isActive");
+    const doctor = await Doctor.findById(req.params.id).populate(
+      "userId",
+      "name email role isActive",
+    );
 
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
@@ -54,14 +66,23 @@ export const createDoctor = async (req, res) => {
     const doctorName = fullName || name;
 
     if (!doctorName || !email || !password) {
-      return res.status(400).json({ message: "fullName, email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "fullName, email and password are required" });
     }
-    
-    const userExists = await User.findOne({ email });
-    if (userExists) return res.status(400).json({ message: "User already exists" });
 
-    const user = await User.create({ name: doctorName, email, password, role: "doctor", isActive: true });
-    
+    const userExists = await User.findOne({ email });
+    if (userExists)
+      return res.status(400).json({ message: "User already exists" });
+
+    const user = await User.create({
+      name: doctorName,
+      email,
+      password,
+      role: "doctor",
+      isActive: true,
+    });
+
     const doctor = await Doctor.create({
       userId: user._id,
       specialization,
@@ -85,9 +106,18 @@ export const updateDoctor = async (req, res) => {
     if (!doctor) return res.status(404).json({ message: "Doctor not found" });
 
     const user = await User.findById(doctor.userId);
-    if (!user) return res.status(404).json({ message: "Linked user account not found" });
+    if (!user)
+      return res.status(404).json({ message: "Linked user account not found" });
 
-    const { fullName, name, email, specialization, department, availableDays, isActive } = req.body;
+    const {
+      fullName,
+      name,
+      email,
+      specialization,
+      department,
+      availableDays,
+      isActive,
+    } = req.body;
     const doctorName = fullName || name;
 
     if (doctorName) {
@@ -128,9 +158,10 @@ export const deactivateDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.findById(req.params.id);
     if (!doctor) return res.status(404).json({ message: "Doctor not found" });
-    
+
     const user = await User.findById(doctor.userId);
-    if (!user) return res.status(404).json({ message: "Linked user account not found" });
+    if (!user)
+      return res.status(404).json({ message: "Linked user account not found" });
 
     doctor.isActive = false;
     user.isActive = false;

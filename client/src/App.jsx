@@ -32,7 +32,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
+
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
@@ -48,8 +48,22 @@ function App() {
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<DoctorDashboard />} />
               <Route path="appointments" element={<DoctorAppointments />} />
-              <Route path="medical-records" element={<div className="p-4 text-white">Medical Records (Coming Soon)</div>} />
-              <Route path="prescriptions" element={<div className="p-4 text-white">Prescriptions (Coming Soon)</div>} />
+              <Route
+                path="medical-records"
+                element={
+                  <div className="p-4 text-white">
+                    Medical Records (Coming Soon)
+                  </div>
+                }
+              />
+              <Route
+                path="prescriptions"
+                element={
+                  <div className="p-4 text-white">
+                    Prescriptions (Coming Soon)
+                  </div>
+                }
+              />
               <Route path="availability" element={<AvailabilityManager />} />
             </Route>
           </Route>

@@ -11,13 +11,17 @@ export const registerUser = async (req, res) => {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ message: "Please provide all required fields" });
+      return res
+        .status(400)
+        .json({ message: "Please provide all required fields" });
     }
 
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: "User already exists with this email" });
+      return res
+        .status(400)
+        .json({ message: "User already exists with this email" });
     }
 
     const userRole = role || "patient";
@@ -32,11 +36,11 @@ export const registerUser = async (req, res) => {
       if (userRole === "patient") {
         await Patient.create({
           userId: user._id,
-          patientId: `PAT-${Date.now()}`
+          patientId: `PAT-${Date.now()}`,
         });
       } else if (userRole === "doctor") {
         await Doctor.create({
-          userId: user._id
+          userId: user._id,
         });
       }
 
@@ -64,7 +68,9 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Please provide email and password" });
+      return res
+        .status(400)
+        .json({ message: "Please provide email and password" });
     }
 
     const user = await User.findOne({ email }).select("+password");

@@ -6,7 +6,10 @@ import User from "../models/User.js";
 // @access  Private (Admin)
 export const getPatients = async (req, res) => {
   try {
-    const patients = await Patient.find().populate("userId", "name email role isActive");
+    const patients = await Patient.find().populate(
+      "userId",
+      "name email role isActive",
+    );
     res.json(patients);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -18,7 +21,10 @@ export const getPatients = async (req, res) => {
 // @access  Private
 export const getPatientById = async (req, res) => {
   try {
-    const patient = await Patient.findById(req.params.id).populate("userId", "name email role isActive");
+    const patient = await Patient.findById(req.params.id).populate(
+      "userId",
+      "name email role isActive",
+    );
     if (!patient) return res.status(404).json({ message: "Patient not found" });
     res.json(patient);
   } catch (error) {
@@ -64,7 +70,7 @@ export const deletePatient = async (req, res) => {
       await User.findByIdAndDelete(patient.userId);
     }
     await patient.deleteOne();
-    
+
     res.json({ message: "Patient removed" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

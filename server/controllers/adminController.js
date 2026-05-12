@@ -14,31 +14,37 @@ const emptyStatusCounts = {
 // @access  Private / Admin
 export const getDashboardMetrics = async (req, res) => {
   try {
-    const [totalPatients, activeDoctors, totalDoctors, appointmentStatusCounts, recentAppointments, recentDoctors] =
-      await Promise.all([
-        Patient.countDocuments({}),
-        Doctor.countDocuments({
-          $or: [{ isActive: { $ne: false } }, { isActive: { $exists: false } }],
-        }),
-        Doctor.countDocuments({}),
-        Appointment.aggregate([
-          {
-            $group: {
-              _id: "$status",
-              count: { $sum: 1 },
-            },
+    const [
+      totalPatients,
+      activeDoctors,
+      totalDoctors,
+      appointmentStatusCounts,
+      recentAppointments,
+      recentDoctors,
+    ] = await Promise.all([
+      Patient.countDocuments({}),
+      Doctor.countDocuments({
+        $or: [{ isActive: { $ne: false } }, { isActive: { $exists: false } }],
+      }),
+      Doctor.countDocuments({}),
+      Appointment.aggregate([
+        {
+          $group: {
+            _id: "$status",
+            count: { $sum: 1 },
           },
-        ]),
-        Appointment.find({})
-          .sort({ appointmentDateTime: -1 })
-          .limit(5)
-          .populate("patientId", "name email")
-          .populate("doctorId", "name email"),
-        Doctor.find({})
-          .sort({ createdAt: -1 })
-          .limit(5)
-          .populate("userId", "name email isActive"),
-      ]);
+        },
+      ]),
+      Appointment.find({})
+        .sort({ appointmentDateTime: -1 })
+        .limit(5)
+        .populate("patientId", "name email")
+        .populate("doctorId", "name email"),
+      Doctor.find({})
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .populate("userId", "name email isActive"),
+    ]);
 
     const appointmentsByStatus = { ...emptyStatusCounts };
     appointmentStatusCounts.forEach((item) => {

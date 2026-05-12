@@ -266,8 +266,8 @@ export const rescheduleAppointment = async (req, res) => {
     }
 
     appointment.appointmentDateTime = parsedDateTime;
-    appointment.status = "Pending"; 
-    appointment.reminderSent = false; 
+    appointment.status = "Pending";
+    appointment.reminderSent = false;
     const updated = await appointment.save();
 
     await updated.populate("doctorId", "name email");

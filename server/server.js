@@ -28,7 +28,7 @@ app.use(
       "http://localhost:3000",
     ].filter(Boolean),
     credentials: true,
-  })
+  }),
 );
 app.use(express.json());
 

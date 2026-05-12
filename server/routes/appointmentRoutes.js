@@ -10,7 +10,12 @@ import {
   getAdminAppointments,
   updateAppointmentByAdmin,
 } from "../controllers/appointmentController.js";
-import { protect, doctorOnly, patientOnly, adminOnly } from "../middleware/authMiddleware.js";
+import {
+  protect,
+  doctorOnly,
+  patientOnly,
+  adminOnly,
+} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
