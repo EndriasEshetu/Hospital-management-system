@@ -143,9 +143,9 @@ export const updateDoctor = async (req, res) => {
 
     await user.save();
     await doctor.save();
-    await populateDoctor(doctor);
+    const populatedDoctor = await populateDoctor(doctor);
 
-    res.json(doctor);
+    res.json(populatedDoctor);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
