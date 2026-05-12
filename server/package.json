@@ -12,7 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@trigger.dev/sdk": "4.4.5",
+    "@trigger.dev/sdk": "4.4.6",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -23,7 +23,7 @@
     "resend": "^6.12.3"
   },
   "devDependencies": {
-    "@trigger.dev/build": "4.4.5",
+    "@trigger.dev/build": "4.4.6",
     "nodemon": "^3.1.0"
   }
 }

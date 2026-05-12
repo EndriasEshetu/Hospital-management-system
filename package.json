@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.100.9",
+    "@trigger.dev/sdk": "^4.4.6",
     "axios": "^1.16.0",
     "react-router-dom": "^7.14.2",
     "zustand": "^5.0.13"

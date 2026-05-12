@@ -4,7 +4,7 @@ import {
   updateAppointmentStatus,
 } from "../api/dashboardApi";
 
-// ─── Fetch all business appointments ────────────────────────
+// Fetch all business appointments
 export const useBusinessAppointments = () => {
   return useQuery({
     queryKey: ["businessAppointments"],
@@ -12,7 +12,7 @@ export const useBusinessAppointments = () => {
   });
 };
 
-// ─── Update appointment status ──────────────────────────────
+// Update appointment status
 export const useUpdateAppointmentStatus = () => {
   const queryClient = useQueryClient();
 
