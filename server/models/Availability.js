@@ -10,15 +10,15 @@ const availabilitySchema = new mongoose.Schema(
     dayOfWeek: {
       type: Number,
       required: true,
-      min: 0, // 0 = Sunday
-      max: 6, // 6 = Saturday
+      min: 0,
+      max: 6,
     },
     startTime: {
-      type: String, // format: "HH:mm" (e.g., "09:00")
+      type: String,
       required: true,
     },
     endTime: {
-      type: String, // format: "HH:mm" (e.g., "17:00")
+      type: String,
       required: true,
     },
     isAvailable: {

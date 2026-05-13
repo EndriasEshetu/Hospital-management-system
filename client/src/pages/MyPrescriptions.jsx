@@ -39,28 +39,27 @@ const MyPrescriptions = () => {
               </div>
               
               <div className="space-y-4">
-                {prescription.medications && prescription.medications.length > 0 && (
+                {prescription.medicines && prescription.medicines.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-300 mb-2">Medications:</h4>
+                    <h4 className="text-sm font-medium text-gray-300 mb-2">Medicines:</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {prescription.medications.map((med, idx) => (
+                      {prescription.medicines.map((med, idx) => (
                         <div key={idx} className="bg-[#111827] p-3 rounded-lg border border-gray-800">
                           <p className="text-emerald-400 font-medium">{med.name}</p>
                           <p className="text-sm text-gray-400 mt-1">Dosage: {med.dosage}</p>
-                          <p className="text-sm text-gray-400">Frequency: {med.frequency}</p>
+                          <p className="text-sm text-gray-400">Duration: {med.duration}</p>
+                          {med.instructions && (
+                            <p className="text-xs text-gray-500 mt-2 italic">"{med.instructions}"</p>
+                          )}
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
-                {prescription.instructions && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-300">Instructions:</h4>
-                    <p className="text-sm text-gray-400 mt-1 bg-[#111827] p-3 rounded-lg border border-gray-800">
-                      {prescription.instructions}
-                    </p>
-                  </div>
-                )}
+                <div className="pt-2 border-t border-gray-800/50 flex items-center gap-2 text-xs text-gray-500">
+                  <Clock size={12} />
+                  <span>Prescribed on {new Date(prescription.createdAt).toLocaleString()}</span>
+                </div>
               </div>
             </div>
           ))}

@@ -18,6 +18,8 @@ import DoctorAppointments from "./pages/DoctorAppointments";
 import AvailabilityManager from "./pages/AvailabilityManager";
 
 import PatientLayout from "./components/PatientLayout";
+import PatientDashboard from "./pages/PatientDashboard";
+import PatientProfile from "./pages/PatientProfile";
 import BookingCalendar from "./pages/BookingCalendar";
 import MyAppointments from "./pages/MyAppointments";
 import MyRecords from "./pages/MyRecords";
@@ -71,7 +73,9 @@ function App() {
           <Route element={<PatientRoute />}>
             <Route path="/patient" element={<PatientLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="dashboard" element={<BookingCalendar />} />
+              <Route path="dashboard" element={<PatientDashboard />} />
+              <Route path="profile" element={<PatientProfile />} />
+              <Route path="book" element={<BookingCalendar />} />
               <Route path="appointments" element={<MyAppointments />} />
               <Route path="records" element={<MyRecords />} />
               <Route path="prescriptions" element={<MyPrescriptions />} />

@@ -104,6 +104,9 @@ const MyAppointments = () => {
                       <p className="text-sm font-semibold text-white">
                         {appt.doctorId?.name ? `Dr. ${appt.doctorId.name}` : "Unknown Doctor"}
                       </p>
+                      <p className="text-xs text-gray-500">
+                        {appt.doctorId?.specialization || "General Physician"}
+                      </p>
                       <p className="text-sm text-gray-400">
                         {formatDateTime(appt.appointmentDateTime)}
                       </p>
@@ -118,21 +121,23 @@ const MyAppointments = () => {
                     <StatusBadge status={appt.status} />
 
                     {/* Actions */}
-                    <div className="flex gap-2 mt-4 sm:mt-0">
-                      <button
-                         onClick={() => setRescheduleTarget(appt)}
-                         className="px-4 py-2 text-xs font-medium rounded-md bg-[#111827] text-blue-400 hover:bg-blue-900/30 border border-gray-700 hover:border-blue-800 transition-colors"
-                       >
-                         Reschedule
-                       </button>
-                      <button
-                        onClick={() => handleCancel(appt._id)}
-                        disabled={cancelMutation.isPending}
-                        className="px-4 py-2 text-xs font-medium rounded-md bg-[#111827] text-red-400 hover:bg-red-900/30 border border-gray-700 hover:border-red-800 transition-colors disabled:opacity-50"
-                      >
-                        Cancel
-                      </button>
-                    </div>
+                    {["Pending", "Confirmed"].includes(appt.status) && (
+                      <div className="flex gap-2 mt-4 sm:mt-0">
+                        <button
+                          onClick={() => setRescheduleTarget(appt)}
+                          className="px-4 py-2 text-xs font-medium rounded-md bg-[#111827] text-blue-400 hover:bg-blue-900/30 border border-gray-700 hover:border-blue-800 transition-colors"
+                        >
+                          Reschedule
+                        </button>
+                        <button
+                          onClick={() => handleCancel(appt._id)}
+                          disabled={cancelMutation.isPending}
+                          className="px-4 py-2 text-xs font-medium rounded-md bg-[#111827] text-red-400 hover:bg-red-900/30 border border-gray-700 hover:border-red-800 transition-colors disabled:opacity-50"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -7,6 +7,8 @@ import {
   cancelAppointment,
   getMyRecords,
   getMyPrescriptions,
+  getPatientProfile,
+  updatePatientProfile,
 } from "../api/patientApi";
 
 export const useDoctors = () => {
@@ -70,5 +72,22 @@ export const useMyPrescriptions = () => {
   return useQuery({
     queryKey: ["myPrescriptions"],
     queryFn: () => getMyPrescriptions("me"),
+  });
+};
+
+export const usePatientProfile = () => {
+  return useQuery({
+    queryKey: ["patientProfile"],
+    queryFn: getPatientProfile,
+  });
+};
+
+export const useUpdatePatientProfile = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updatePatientProfile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["patientProfile"] });
+    },
   });
 };

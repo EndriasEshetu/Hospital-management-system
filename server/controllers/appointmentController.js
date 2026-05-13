@@ -169,6 +169,17 @@ export const createAppointment = async (req, res) => {
       return res.status(400).json({ message: "Invalid appointmentDateTime" });
     }
 
+    // Validation: only future dates
+    if (parsedDateTime <= new Date()) {
+      return res.status(400).json({ message: "Appointment must be in the future" });
+    }
+
+    // Validation: doctor must exist and be a doctor
+    const doctor = await User.findOne({ _id: doctorId, role: "doctor" });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
     const conflict = await Appointment.findOne({
       doctorId,
       appointmentDateTime: parsedDateTime,
@@ -216,10 +227,52 @@ export const getMyAppointments = async (req, res) => {
   }
 };
 
-// @desc    Reschedule an appointment (change date/time)
-// @route   PUT /api/appointments/:id/reschedule
+// @desc    Cancel an appointment
+// @route   PATCH /api/appointments/:id/cancel
 // @access  Private (Patient, owner only)
-export const rescheduleAppointment = async (req, res) => {
+export const cancelAppointmentPatch = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+
+    // Rule: only patient can cancel own appointment
+    if (appointment.patientId.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to cancel this appointment" });
+    }
+
+    // Rule: cannot cancel completed appointment
+    if (appointment.status === "Completed") {
+      return res
+        .status(400)
+        .json({ message: "Cannot cancel a completed appointment" });
+    }
+
+    if (appointment.status === "Cancelled") {
+      return res
+        .status(400)
+        .json({ message: "Appointment is already cancelled" });
+    }
+
+    appointment.status = "Cancelled";
+    const updated = await appointment.save();
+
+    await updated.populate("doctorId", "name email");
+    res.json(updated);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// @desc    Reschedule an appointment
+// @route   PATCH /api/appointments/:id/reschedule
+// @access  Private (Patient, owner only)
+export const rescheduleAppointmentPatch = async (req, res) => {
   try {
     const { appointmentDateTime } = req.body;
 
@@ -234,22 +287,29 @@ export const rescheduleAppointment = async (req, res) => {
       return res.status(400).json({ message: "Invalid appointmentDateTime" });
     }
 
+    // Rule: new date must be future date
+    if (parsedDateTime <= new Date()) {
+      return res.status(400).json({ message: "New appointment must be in the future" });
+    }
+
     const appointment = await Appointment.findById(req.params.id);
 
     if (!appointment) {
       return res.status(404).json({ message: "Appointment not found" });
     }
 
+    // Rule: only owner patient
     if (appointment.patientId.toString() !== req.user._id.toString()) {
       return res
         .status(403)
         .json({ message: "Not authorized to reschedule this appointment" });
     }
 
-    if (appointment.status === "Cancelled") {
+    // Rule: only confirmed or pending appointments
+    if (!["Confirmed", "Pending"].includes(appointment.status)) {
       return res
         .status(400)
-        .json({ message: "Cannot reschedule a cancelled appointment" });
+        .json({ message: `Cannot reschedule a ${appointment.status} appointment` });
     }
 
     const conflict = await Appointment.findOne({
@@ -278,36 +338,21 @@ export const rescheduleAppointment = async (req, res) => {
   }
 };
 
+// Keep existing ones for compatibility if needed, but the user requested PATCH routes specifically.
+// I'll name the new ones specifically and update the routes.
+
+// @desc    Reschedule an appointment (change date/time)
+// @route   PUT /api/appointments/:id/reschedule
+// @access  Private (Patient, owner only)
+export const rescheduleAppointment = async (req, res) => {
+  // ... (keeping for now)
+  return rescheduleAppointmentPatch(req, res);
+};
+
 // @desc    Cancel an appointment
 // @route   PUT /api/appointments/:id/cancel
 // @access  Private (Patient, owner only)
 export const cancelAppointment = async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id);
-
-    if (!appointment) {
-      return res.status(404).json({ message: "Appointment not found" });
-    }
-
-    if (appointment.patientId.toString() !== req.user._id.toString()) {
-      return res
-        .status(403)
-        .json({ message: "Not authorized to cancel this appointment" });
-    }
-
-    if (appointment.status === "Cancelled") {
-      return res
-        .status(400)
-        .json({ message: "Appointment is already cancelled" });
-    }
-
-    appointment.status = "Cancelled";
-    const updated = await appointment.save();
-
-    await updated.populate("doctorId", "name email");
-    res.json(updated);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
+  // ... (keeping for now)
+  return cancelAppointmentPatch(req, res);
 };

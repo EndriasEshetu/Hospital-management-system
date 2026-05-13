@@ -4,10 +4,15 @@ import {
   getPatientById,
   updatePatient,
   deletePatient,
+  getPatientProfile,
+  updatePatientProfile,
 } from "../controllers/patientController.js";
-import { protect, adminOnly } from "../middleware/authMiddleware.js";
+import { protect, adminOnly, patientOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+
+router.get("/profile", protect, patientOnly, getPatientProfile);
+router.put("/profile", protect, patientOnly, updatePatientProfile);
 
 router.get("/", protect, adminOnly, getPatients);
 router.get("/:id", protect, adminOnly, getPatientById);

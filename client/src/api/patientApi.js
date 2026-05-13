@@ -1,4 +1,13 @@
-import api from "./authApi";
+// ─── Patient Profile API ──────────────────────────────
+export const getPatientProfile = async () => {
+  const { data } = await api.get("/patients/profile");
+  return data;
+};
+
+export const updatePatientProfile = async (profileData) => {
+  const { data } = await api.put("/patients/profile", profileData);
+  return data;
+};
 
 // ─── Patient -> Doctor API ──────────────────────────────
 export const getDoctors = async () => {
@@ -18,14 +27,14 @@ export const getMyAppointments = async () => {
 };
 
 export const rescheduleAppointment = async ({ id, appointmentDateTime }) => {
-  const { data } = await api.put(`/appointments/${id}/reschedule`, {
+  const { data } = await api.patch(`/appointments/${id}/reschedule`, {
     appointmentDateTime,
   });
   return data;
 };
 
 export const cancelAppointment = async (id) => {
-  const { data } = await api.put(`/appointments/${id}/cancel`);
+  const { data } = await api.patch(`/appointments/${id}/cancel`);
   return data;
 };
 

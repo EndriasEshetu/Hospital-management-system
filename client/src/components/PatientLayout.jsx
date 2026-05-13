@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
-import { Menu, X, Calendar, ClipboardList, LogOut, LayoutDashboard, FileText, Pill } from "lucide-react";
+import { Menu, X, Calendar, ClipboardList, LogOut, LayoutDashboard, FileText, Pill, User, PlusCircle } from "lucide-react";
 
 const navItems = [
   {
@@ -10,8 +10,18 @@ const navItems = [
     icon: <LayoutDashboard size={20} />,
   },
   {
+    to: "/patient/profile",
+    label: "Profile",
+    icon: <User size={20} />,
+  },
+  {
+    to: "/patient/book",
+    label: "Book Appointment",
+    icon: <PlusCircle size={20} />,
+  },
+  {
     to: "/patient/appointments",
-    label: "Appointments",
+    label: "My Appointments",
     icon: <Calendar size={20} />,
   },
   {
