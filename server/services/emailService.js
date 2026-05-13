@@ -25,9 +25,18 @@ export const sendReminderEmail = async ({
   doctorName,
 }) => {
   try {
+    // Resend free tier/testing restriction: can only send to verified owner email
+    const recipient = process.env.NODE_ENV === "production" 
+      ? to 
+      : "endriaseshetu75@gmail.com";
+
+    if (process.env.NODE_ENV !== "production" && to !== recipient) {
+      console.log(`[Email] Dev mode: Redirecting email from ${to} to verified test email ${recipient}`);
+    }
+
     const { data, error } = await resend.emails.send({
-      from: "Hospital Management System <onboarding@resend.dev>", // Resend default test sender
-      to: [to],
+      from: "Hospital Management System <onboarding@resend.dev>", 
+      to: [recipient],
       subject: `Appointment Reminder - Upcoming Booking with Dr. ${doctorName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
