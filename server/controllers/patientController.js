@@ -102,6 +102,24 @@ export const updatePatientProfile = async (req, res) => {
   }
 };
 
+// @desc    Get patient profile by userId
+// @route   GET /api/patients/profile/:userId
+// @access  Private (Doctor, Admin)
+export const getPatientProfileByUserId = async (req, res) => {
+  try {
+    const patient = await Patient.findOne({ userId: req.params.userId }).populate(
+      "userId",
+      "name email role isActive"
+    );
+    if (!patient) {
+      return res.status(404).json({ message: "Patient profile not found" });
+    }
+    res.json(patient);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 // @desc    Delete patient
 // @route   DELETE /api/patients/:id
 // @access  Private / Admin

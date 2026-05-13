@@ -1,3 +1,5 @@
+import api from "./authApi";
+
 // ─── Patient Profile API ──────────────────────────────
 export const getPatientProfile = async () => {
   const { data } = await api.get("/patients/profile");

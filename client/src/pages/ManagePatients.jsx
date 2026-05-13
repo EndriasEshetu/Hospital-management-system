@@ -65,6 +65,9 @@ const ManagePatients = () => {
           setEditingPatient(null);
           setForm(emptyForm);
         },
+        onError: (error) => {
+          alert(error.response?.data?.message || "Failed to update patient");
+        },
       },
     );
   };

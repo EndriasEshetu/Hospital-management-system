@@ -1,12 +1,22 @@
 import api from "./authApi";
 
-export const getDoctorAppointments = async () => {
-  const { data } = await api.get("/appointments/doctor");
+export const getDoctorAppointments = async (params) => {
+  const { data } = await api.get("/appointments/doctor", { params });
   return data;
 };
 
 export const updateAppointmentStatus = async ({ id, status }) => {
   const { data } = await api.put(`/appointments/${id}/status`, { status });
+  return data;
+};
+
+export const completeAppointment = async (id) => {
+  const { data } = await api.patch(`/appointments/${id}/complete`);
+  return data;
+};
+
+export const fetchPatientDetails = async (userId) => {
+  const { data } = await api.get(`/patients/profile/${userId}`);
   return data;
 };
 

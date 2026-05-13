@@ -15,6 +15,8 @@ import ManageAppointments from "./pages/ManageAppointments";
 import DoctorLayout from "./components/DoctorLayout";
 import DoctorDashboard from "./pages/DoctorDashboard";
 import DoctorAppointments from "./pages/DoctorAppointments";
+import DoctorMedicalRecords from "./pages/DoctorMedicalRecords";
+import DoctorPrescriptions from "./pages/DoctorPrescriptions";
 import AvailabilityManager from "./pages/AvailabilityManager";
 
 import PatientLayout from "./components/PatientLayout";
@@ -50,22 +52,8 @@ function App() {
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<DoctorDashboard />} />
               <Route path="appointments" element={<DoctorAppointments />} />
-              <Route
-                path="medical-records"
-                element={
-                  <div className="p-4 text-white">
-                    Medical Records (Coming Soon)
-                  </div>
-                }
-              />
-              <Route
-                path="prescriptions"
-                element={
-                  <div className="p-4 text-white">
-                    Prescriptions (Coming Soon)
-                  </div>
-                }
-              />
+              <Route path="medical-records" element={<DoctorMedicalRecords />} />
+              <Route path="prescriptions" element={<DoctorPrescriptions />} />
               <Route path="availability" element={<AvailabilityManager />} />
             </Route>
           </Route>

@@ -2,6 +2,7 @@ import express from "express";
 import {
   getDoctorAppointments,
   updateAppointmentStatus,
+  completeAppointmentPatch,
   createAppointment,
   getMyAppointments,
   rescheduleAppointmentPatch,
@@ -33,5 +34,6 @@ router.patch("/:id/cancel", protect, patientOnly, cancelAppointmentPatch);
 // ── Doctor routes ───────────────────────────
 router.get("/doctor", protect, doctorOnly, getDoctorAppointments);
 router.put("/:id/status", protect, doctorOnly, updateAppointmentStatus);
+router.patch("/:id/complete", protect, doctorOnly, completeAppointmentPatch);
 
 export default router;

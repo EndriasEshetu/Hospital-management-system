@@ -7,9 +7,24 @@ import { sendReminderEmail } from "../services/emailService.js";
 // @access  Private / Doctor
 export const getDoctorAppointments = async (req, res) => {
   try {
-    const appointments = await Appointment.find({
-      doctorId: req.user._id,
-    })
+    const { status, date } = req.query;
+    const query = { doctorId: req.user._id };
+
+    if (status) {
+      query.status = status;
+    }
+
+    if (date) {
+      const start = new Date(date);
+      if (isNaN(start.getTime())) {
+        return res.status(400).json({ message: "Invalid date filter" });
+      }
+      const end = new Date(start);
+      end.setDate(end.getDate() + 1);
+      query.appointmentDateTime = { $gte: start, $lt: end };
+    }
+
+    const appointments = await Appointment.find(query)
       .populate("patientId", "name email") // populate patient info
       .sort({ appointmentDateTime: 1 }); // upcoming first
 
@@ -140,6 +155,35 @@ export const updateAppointmentStatus = async (req, res) => {
 
     await updated.populate("patientId", "name email");
 
+    res.json(updated);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// @desc    Mark appointment completed
+// @route   PATCH /api/appointments/:id/complete
+// @access  Private / Doctor
+export const completeAppointmentPatch = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+
+    // Rule: doctor only, assigned doctor only
+    if (appointment.doctorId.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to complete this appointment" });
+    }
+
+    appointment.status = "Completed";
+    const updated = await appointment.save();
+
+    await updated.populate("patientId", "name email");
     res.json(updated);
   } catch (error) {
     console.error(error);

@@ -101,6 +101,9 @@ const ManageDoctors = () => {
             setIsModalOpen(false);
             setEditingDoctor(null);
           },
+          onError: (error) => {
+            alert(error.response?.data?.message || "Failed to update doctor");
+          }
         },
       );
       return;
@@ -113,6 +116,9 @@ const ManageDoctors = () => {
           setIsModalOpen(false);
           setForm(emptyForm);
         },
+        onError: (error) => {
+          alert(error.response?.data?.message || "Failed to create doctor");
+        }
       },
     );
   };
@@ -121,7 +127,11 @@ const ManageDoctors = () => {
     if (
       window.confirm(`Deactivate Dr. ${doctor.userId?.name || "this doctor"}?`)
     ) {
-      deactivateMutation.mutate(doctor._id);
+      deactivateMutation.mutate(doctor._id, {
+        onError: (error) => {
+          alert(error.response?.data?.message || "Failed to deactivate doctor");
+        }
+      });
     }
   };
 
@@ -129,7 +139,11 @@ const ManageDoctors = () => {
     if (
       window.confirm(`Reactivate Dr. ${doctor.userId?.name || "this doctor"}?`)
     ) {
-      reactivateMutation.mutate(doctor._id);
+      reactivateMutation.mutate(doctor._id, {
+        onError: (error) => {
+          alert(error.response?.data?.message || "Failed to reactivate doctor");
+        }
+      });
     }
   };
 
