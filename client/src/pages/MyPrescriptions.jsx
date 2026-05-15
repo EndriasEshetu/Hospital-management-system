@@ -1,4 +1,6 @@
 import { useMyPrescriptions } from "../hooks/usePatient";
+import { Clock } from "lucide-react";
+
 
 const MyPrescriptions = () => {
   const { data: prescriptions = [], isLoading, isError } = useMyPrescriptions();
