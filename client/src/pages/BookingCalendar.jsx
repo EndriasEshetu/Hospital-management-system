@@ -1,6 +1,8 @@
 import { useState, useMemo } from "react";
 import { Search, Filter, Calendar as CalendarIcon, User, ChevronRight, LayoutGrid, List } from "lucide-react";
 import { useDoctors, useBookAppointment } from "../hooks/usePatient";
+import { usePublicAvailability } from "../hooks/useAvailability";
+
 import { useNavigate } from "react-router-dom";
 import DoctorCard from "../components/DoctorCard";
 import DoctorDetailsPanel from "../components/DoctorDetailsPanel";
@@ -10,6 +12,7 @@ import BookingSummary from "../components/BookingSummary";
 const BookingCalendar = () => {
   const navigate = useNavigate();
   const { data: doctors = [], isLoading, isError } = useDoctors();
+  const { data: allAvailability = [] } = usePublicAvailability();
   const bookMutation = useBookAppointment();
 
   // Booking Flow State
@@ -198,6 +201,7 @@ const BookingCalendar = () => {
             onBack={resetFlow}
             selectedDate={selectedDate}
             onSelectDate={handleSelectDate}
+            availability={allAvailability.filter(a => a.businessId?._id === selectedDoctor.userId?._id)}
           />
 
           {/* Step 3: Time Selection */}
@@ -206,6 +210,7 @@ const BookingCalendar = () => {
               selectedDate={selectedDate}
               selectedTime={selectedTime}
               onSelectTime={setSelectedTime}
+              availability={allAvailability.filter(a => a.businessId?._id === selectedDoctor.userId?._id)}
             />
           )}
 

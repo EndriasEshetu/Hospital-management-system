@@ -1,9 +1,9 @@
 import { Clock } from "lucide-react";
 import { isSameDay, parse, isAfter } from "date-fns";
 
-const TimeSlotPicker = ({ selectedDate, selectedTime, onSelectTime }) => {
-  // Hardcoded slots as seen in the original BookingCalendar.jsx
-  const slots = [
+const TimeSlotPicker = ({ selectedDate, selectedTime, onSelectTime, availability = [] }) => {
+  // Default slots if no specific availability is defined
+  const defaultSlots = [
     { id: "09:00", label: "09:00 AM" },
     { id: "10:00", label: "10:00 AM" },
     { id: "11:00", label: "11:00 AM" },
@@ -13,6 +13,32 @@ const TimeSlotPicker = ({ selectedDate, selectedTime, onSelectTime }) => {
     { id: "16:00", label: "04:00 PM" },
     { id: "17:00", label: "05:00 PM" },
   ];
+
+  // Logic to get slots for the selected day
+  const getSlotsForDay = () => {
+    if (!selectedDate) return [];
+    
+    const dayNum = new Date(selectedDate).getDay();
+    const daySlots = availability.filter(a => a.dayOfWeek === dayNum && a.isAvailable);
+
+    if (daySlots.length === 0) return defaultSlots;
+
+    const generatedSlots = [];
+    daySlots.forEach(slot => {
+      const startHour = parseInt(slot.startTime.split(":")[0]);
+      const endHour = parseInt(slot.endTime.split(":")[0]);
+      
+      for (let h = startHour; h < endHour; h++) {
+        const timeStr = `${h.toString().padStart(2, "0")}:00`;
+        const label = h < 12 ? `${h}:00 AM` : h === 12 ? `12:00 PM` : `${h - 12}:00 PM`;
+        generatedSlots.push({ id: timeStr, label });
+      }
+    });
+
+    return generatedSlots.sort((a, b) => a.id.localeCompare(b.id));
+  };
+
+  const slots = getSlotsForDay();
 
   const now = new Date();
   const isToday = selectedDate && isSameDay(new Date(selectedDate), now);

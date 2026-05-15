@@ -24,3 +24,7 @@ export const updateAppointmentStatus = async ({ id, status }) => {
   const { data } = await api.put(`/appointments/${id}/status`, { status });
   return data;
 };
+export const getPublicAvailability = async () => {
+  const { data } = await api.get("/availability");
+  return data;
+};

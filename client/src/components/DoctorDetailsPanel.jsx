@@ -1,22 +1,29 @@
 import { ArrowLeft, User, Stethoscope, Building2, Calendar as CalendarIcon, Clock } from "lucide-react";
 import { format, addDays, isSameDay, startOfDay } from "date-fns";
 
-const DoctorDetailsPanel = ({ doctor, onBack, selectedDate, onSelectDate }) => {
+const DoctorDetailsPanel = ({ doctor, onBack, selectedDate, onSelectDate, availability = [] }) => {
   const name = doctor.userId?.name || "Unknown Doctor";
   const specialization = doctor.specialization || "General Physician";
   const department = doctor.department || "General Medicine";
   const availableDays = doctor.availableDays || [];
 
-  // Logic to find available dates for the next 14 days
+  // Logic to find available dates for the next 30 days
   const getNextAvailableDates = () => {
     const dates = [];
     const today = startOfDay(new Date());
     
+    // Get numeric days of week from Availability records
+    const granularDays = availability.map(a => a.dayOfWeek);
+
     for (let i = 0; i < 30; i++) {
       const date = addDays(today, i);
       const dayName = format(date, "EEEE");
+      const dayNum = date.getDay();
       
-      if (availableDays.includes(dayName)) {
+      // A date is available if:
+      // 1. Its day is in the doctor's simple availableDays list
+      // 2. OR its day is in the granular availability list
+      if (availableDays.includes(dayName) || granularDays.includes(dayNum)) {
         dates.push(date);
       }
     }

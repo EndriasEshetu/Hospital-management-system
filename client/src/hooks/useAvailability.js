@@ -3,7 +3,16 @@ import {
   getMyAvailability,
   createAvailability,
   updateAvailability,
+  getPublicAvailability,
 } from "../api/dashboardApi";
+
+// ─── Fetch all public availability slots ────────────────────────
+export const usePublicAvailability = () => {
+  return useQuery({
+    queryKey: ["availability", "public"],
+    queryFn: getPublicAvailability,
+  });
+};
 
 // ─── Fetch all availability slots ───────────────────────────
 export const useMyAvailability = () => {

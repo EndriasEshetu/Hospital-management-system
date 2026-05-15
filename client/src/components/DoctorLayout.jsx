@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
-import { Menu, X, Calendar, LogOut, LayoutDashboard, FileText, Pill } from "lucide-react";
+import { Menu, X, Calendar, LogOut, LayoutDashboard, FileText, Pill, Clock } from "lucide-react";
 
 const navItems = [
   {
@@ -23,6 +23,11 @@ const navItems = [
     to: "/doctor/prescriptions",
     label: "Prescriptions",
     icon: <Pill size={20} />,
+  },
+  {
+    to: "/doctor/availability",
+    label: "Manage Availability",
+    icon: <Clock size={20} />,
   },
 ];
 

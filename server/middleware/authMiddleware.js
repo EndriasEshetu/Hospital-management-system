@@ -70,3 +70,11 @@ export const patientOnly = (req, res, next) => {
     res.status(403).json({ message: "Not authorized as a patient" });
   }
 };
+// Middleware for doctor or admin routes
+export const doctorOrAdmin = (req, res, next) => {
+  if (req.user && (req.user.role === "doctor" || req.user.role === "admin")) {
+    next();
+  } else {
+    res.status(403).json({ message: "Not authorized. Staff access only." });
+  }
+};
