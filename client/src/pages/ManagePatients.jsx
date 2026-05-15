@@ -249,23 +249,37 @@ const ManagePatients = () => {
                 </label>
                 <label className="space-y-2">
                   <span className="text-sm text-gray-300">Gender</span>
-                  <input
+                  <select
                     value={form.gender}
                     onChange={(e) =>
                       setForm({ ...form, gender: e.target.value })
                     }
-                    className="w-full rounded-xl bg-[#111827] border border-gray-700 px-4 py-3 text-sm text-gray-200 outline-none focus:border-emerald-500"
-                  />
+                    className="w-full rounded-xl bg-[#111827] border border-gray-700 px-4 py-3 text-sm text-gray-200 outline-none focus:border-emerald-500 transition-all"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
                 </label>
                 <label className="space-y-2">
                   <span className="text-sm text-gray-300">Blood Group</span>
-                  <input
+                  <select
                     value={form.bloodGroup}
                     onChange={(e) =>
                       setForm({ ...form, bloodGroup: e.target.value })
                     }
-                    className="w-full rounded-xl bg-[#111827] border border-gray-700 px-4 py-3 text-sm text-gray-200 outline-none focus:border-emerald-500"
-                  />
+                    className="w-full rounded-xl bg-[#111827] border border-gray-700 px-4 py-3 text-sm text-gray-200 outline-none focus:border-emerald-500 transition-all"
+                  >
+                    <option value="">Select Blood Group</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
                 </label>
                 <label className="space-y-2 md:col-span-2">
                   <span className="text-sm text-gray-300">Phone</span>
