@@ -19,23 +19,30 @@ const TimeSlotPicker = ({ selectedDate, selectedTime, onSelectTime, availability
     if (!selectedDate) return [];
     
     const dayNum = new Date(selectedDate).getDay();
-    const daySlots = availability.filter(a => a.dayOfWeek === dayNum && a.isAvailable);
-
-    if (daySlots.length === 0) return defaultSlots;
-
-    const generatedSlots = [];
-    daySlots.forEach(slot => {
-      const startHour = parseInt(slot.startTime.split(":")[0]);
-      const endHour = parseInt(slot.endTime.split(":")[0]);
+    
+    // Rule check: Does this doctor have ANY custom availability defined?
+    const hasAnyCustomAvailability = availability.length > 0;
+    
+    if (hasAnyCustomAvailability) {
+      // ONLY use custom slots for this specific day
+      const daySlots = availability.filter(a => a.dayOfWeek === dayNum && a.isAvailable);
       
-      for (let h = startHour; h < endHour; h++) {
-        const timeStr = `${h.toString().padStart(2, "0")}:00`;
-        const label = h < 12 ? `${h}:00 AM` : h === 12 ? `12:00 PM` : `${h - 12}:00 PM`;
-        generatedSlots.push({ id: timeStr, label });
-      }
-    });
-
-    return generatedSlots.sort((a, b) => a.id.localeCompare(b.id));
+      const generatedSlots = [];
+      daySlots.forEach(slot => {
+        const startHour = parseInt(slot.startTime.split(":")[0]);
+        const endHour = parseInt(slot.endTime.split(":")[0]);
+        
+        for (let h = startHour; h < endHour; h++) {
+          const timeStr = `${h.toString().padStart(2, "0")}:00`;
+          const label = h < 12 ? `${h}:00 AM` : h === 12 ? `12:00 PM` : `${h - 12}:00 PM`;
+          generatedSlots.push({ id: timeStr, label });
+        }
+      });
+      return generatedSlots.sort((a, b) => a.id.localeCompare(b.id));
+    } else {
+      // Fallback to defaults
+      return defaultSlots;
+    }
   };
 
   const slots = getSlotsForDay();

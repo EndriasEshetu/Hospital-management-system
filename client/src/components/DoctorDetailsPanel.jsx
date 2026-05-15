@@ -14,17 +14,23 @@ const DoctorDetailsPanel = ({ doctor, onBack, selectedDate, onSelectDate, availa
     
     // Get numeric days of week from Availability records
     const granularDays = availability.map(a => a.dayOfWeek);
+    const hasCustomAvailability = granularDays.length > 0;
 
     for (let i = 0; i < 30; i++) {
       const date = addDays(today, i);
       const dayName = format(date, "EEEE");
       const dayNum = date.getDay();
       
-      // A date is available if:
-      // 1. Its day is in the doctor's simple availableDays list
-      // 2. OR its day is in the granular availability list
-      if (availableDays.includes(dayName) || granularDays.includes(dayNum)) {
-        dates.push(date);
+      if (hasCustomAvailability) {
+        // Rule: If custom exists, use ONLY custom
+        if (granularDays.includes(dayNum)) {
+          dates.push(date);
+        }
+      } else {
+        // Rule: Fallback to Admin's availableDays
+        if (availableDays.includes(dayName)) {
+          dates.push(date);
+        }
       }
     }
     return dates;
