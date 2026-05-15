@@ -198,3 +198,22 @@ export const reactivateDoctor = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+// @desc    Delete doctor
+// @route   DELETE /api/doctors/:id
+// @access  Private (Admin)
+export const deleteDoctor = async (req, res) => {
+  try {
+    const doctor = await Doctor.findById(req.params.id);
+    if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+
+    // Also delete user
+    if (doctor.userId) {
+      await User.findByIdAndDelete(doctor.userId);
+    }
+    await doctor.deleteOne();
+
+    res.json({ message: "Doctor removed" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

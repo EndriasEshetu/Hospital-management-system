@@ -10,6 +10,8 @@ import {
   updateDoctor,
   deactivateDoctor,
   reactivateDoctor,
+  deleteDoctor,
+  deletePatient,
   getAdminAppointments,
   updateAdminAppointment,
 } from "../api/adminApi";
@@ -40,6 +42,17 @@ export const useUpdatePatient = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updatePatient,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminPatients"] });
+      queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });
+    },
+  });
+};
+
+export const useDeletePatient = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deletePatient,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminPatients"] });
       queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });
@@ -102,6 +115,18 @@ export const useReactivateDoctor = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: reactivateDoctor,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminDoctors"] });
+      queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["doctors"] });
+    },
+  });
+};
+
+export const useDeleteDoctor = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteDoctor,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminDoctors"] });
       queryClient.invalidateQueries({ queryKey: ["adminDashboard"] });

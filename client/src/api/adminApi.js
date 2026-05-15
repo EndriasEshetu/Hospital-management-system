@@ -59,3 +59,13 @@ export const reactivateDoctor = async (id) => {
   const { data } = await api.patch(`/doctors/${id}/reactivate`);
   return data;
 };
+
+export const deleteDoctor = async (id) => {
+  const { data } = await api.delete(`/doctors/${id}`);
+  return data;
+};
+
+export const deletePatient = async (id) => {
+  const { data } = await api.delete(`/patients/${id}`);
+  return data;
+};

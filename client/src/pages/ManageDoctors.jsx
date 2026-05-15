@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
-import { Plus, Search, Pencil, Ban, X, CheckCircle2, RefreshCw } from "lucide-react";
+import { Plus, Search, Pencil, Ban, X, CheckCircle2, RefreshCw, Trash2 } from "lucide-react";
 import {
   useAllDoctors,
   useCreateDoctor,
   useUpdateDoctor,
   useDeactivateDoctor,
   useReactivateDoctor,
+  useDeleteDoctor,
 } from "../hooks/useAdmin";
 
 const DAYS = [
@@ -33,6 +34,7 @@ const ManageDoctors = () => {
   const updateMutation = useUpdateDoctor();
   const deactivateMutation = useDeactivateDoctor();
   const reactivateMutation = useReactivateDoctor();
+  const deleteMutation = useDeleteDoctor();
 
   const [query, setQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -143,6 +145,20 @@ const ManageDoctors = () => {
         onError: (error) => {
           alert(error.response?.data?.message || "Failed to reactivate doctor");
         }
+      });
+    }
+  };
+
+  const handleDelete = (doctor) => {
+    if (
+      window.confirm(
+        `Are you sure you want to PERMANENTLY delete Dr. ${doctor.userId?.name || "this doctor"} and their account? This action cannot be undone.`
+      )
+    ) {
+      deleteMutation.mutate(doctor._id, {
+        onError: (error) => {
+          alert(error.response?.data?.message || "Failed to delete doctor");
+        },
       });
     }
   };
@@ -298,6 +314,15 @@ const ManageDoctors = () => {
                               Reactivate
                             </button>
                           )}
+                          <button
+                            onClick={() => handleDelete(doctor)}
+                            disabled={deleteMutation.isPending}
+                            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 disabled:opacity-50"
+                            title="Delete Permanently"
+                          >
+                            <Trash2 size={14} />
+                            Delete
+                          </button>
                         </div>
                       </td>
                     </tr>

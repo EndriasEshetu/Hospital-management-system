@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { Pencil, Search, X } from "lucide-react";
-import { useAllPatients, useUpdatePatient } from "../hooks/useAdmin";
+import { Pencil, Search, X, Trash2 } from "lucide-react";
+import { useAllPatients, useUpdatePatient, useDeletePatient } from "../hooks/useAdmin";
 
 const emptyForm = {
   age: "",
@@ -13,6 +13,7 @@ const emptyForm = {
 const ManagePatients = () => {
   const { data: patients = [], isLoading, isError } = useAllPatients();
   const updateMutation = useUpdatePatient();
+  const deleteMutation = useDeletePatient();
 
   const [query, setQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,6 +71,20 @@ const ManagePatients = () => {
         },
       },
     );
+  };
+
+  const handleDelete = (patient) => {
+    if (
+      window.confirm(
+        `Are you sure you want to PERMANENTLY delete patient ${patient.userId?.name || "this patient"} and their account? This action cannot be undone.`
+      )
+    ) {
+      deleteMutation.mutate(patient._id, {
+        onError: (error) => {
+          alert(error.response?.data?.message || "Failed to delete patient");
+        },
+      });
+    }
   };
 
   if (isLoading) {
@@ -173,13 +188,24 @@ const ManagePatients = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => openEdit(patient)}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-[#111827] text-gray-200 border border-gray-700 hover:border-gray-500"
-                      >
-                        <Pencil size={14} />
-                        Edit
-                      </button>
+                      <div className="inline-flex items-center gap-2">
+                        <button
+                          onClick={() => openEdit(patient)}
+                          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-[#111827] text-gray-200 border border-gray-700 hover:border-gray-500"
+                        >
+                          <Pencil size={14} />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(patient)}
+                          disabled={deleteMutation.isPending}
+                          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 disabled:opacity-50"
+                          title="Delete Permanently"
+                        >
+                          <Trash2 size={14} />
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

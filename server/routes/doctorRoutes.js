@@ -6,6 +6,7 @@ import {
   updateDoctor,
   deactivateDoctor,
   reactivateDoctor,
+  deleteDoctor,
 } from "../controllers/doctorController.js";
 import { protect, adminOnly } from "../middleware/authMiddleware.js";
 
@@ -17,5 +18,6 @@ router.post("/", protect, adminOnly, createDoctor);
 router.put("/:id", protect, adminOnly, updateDoctor);
 router.patch("/:id/deactivate", protect, adminOnly, deactivateDoctor);
 router.patch("/:id/reactivate", protect, adminOnly, reactivateDoctor);
+router.delete("/:id", protect, adminOnly, deleteDoctor);
 
 export default router;
