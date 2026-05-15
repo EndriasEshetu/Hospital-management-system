@@ -73,7 +73,7 @@ const DoctorAppointments = () => {
             name="status"
             value={filters.status}
             onChange={handleFilterChange}
-            className="bg-transparent border-none text-gray-200 text-sm focus:outline-none w-full"
+            className="bg-[#111827] border-none text-gray-200 text-sm focus:outline-none w-full"
           >
             <option value="">All Statuses</option>
             <option value="Pending">Pending</option>

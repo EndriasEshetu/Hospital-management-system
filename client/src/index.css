@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import 'react-big-calendar/lib/css/react-big-calendar.css';
 
+:root {
+  color-scheme: dark;
+}
+
 /* Override react-big-calendar toolbar button colors for dark theme */
 .rbc-toolbar button {
   color: white !important;
@@ -13,4 +17,23 @@
 
 .rbc-toolbar button.rbc-active {
   color: black !important;
+}
+
+/* Native Date Picker Dark Mode Styles */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  color-scheme: dark !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%) brightness(200%) !important;
+  cursor: pointer;
+}
+
+select option {
+  background-color: #111827;
+  color: white;
 }

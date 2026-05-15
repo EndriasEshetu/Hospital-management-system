@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import { Menu, X, Calendar, LogOut, LayoutDashboard, FileText, Pill, Clock } from "lucide-react";
 
@@ -33,7 +33,13 @@ const navItems = [
 
 const DoctorLayout = () => {
   const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <div className="flex min-h-screen bg-[#475a6c] font-sans relative">
@@ -90,7 +96,7 @@ const DoctorLayout = () => {
 
         <div className="p-4 border-t border-gray-700">
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-red-400 bg-red-900/10 rounded-xl hover:bg-red-900/20 border border-red-900/20 hover:border-red-800/40 transition-all"
           >
             <LogOut size={18} />
