@@ -12,6 +12,9 @@ export const getDoctorAppointments = async (req, res) => {
 
     if (status) {
       query.status = status;
+    } else {
+      // Dashboard rule: Doctor views Confirmed and Completed appointments
+      query.status = { $in: ["Confirmed", "Completed"] };
     }
 
     if (date) {
@@ -97,11 +100,11 @@ export const getAdminAppointments = async (req, res) => {
 export const updateAppointmentByAdmin = async (req, res) => {
   try {
     const { status } = req.body;
-    const allowedStatuses = ["Pending", "Confirmed", "Completed", "Cancelled"];
+    const allowedStatuses = ["Confirmed", "Cancelled"];
 
     if (!status || !allowedStatuses.includes(status)) {
       return res.status(400).json({
-        message: `Invalid status. Allowed values: ${allowedStatuses.join(", ")}`,
+        message: `Admin can only set status to: ${allowedStatuses.join(", ")}`,
       });
     }
 
@@ -178,6 +181,13 @@ export const completeAppointmentPatch = async (req, res) => {
       return res
         .status(403)
         .json({ message: "Not authorized to complete this appointment" });
+    }
+
+    // Rule: only Confirmed appointments can become Completed
+    if (appointment.status !== "Confirmed") {
+      return res.status(400).json({
+        message: `Cannot complete a ${appointment.status} appointment. It must be Confirmed first.`,
+      });
     }
 
     appointment.status = "Completed";

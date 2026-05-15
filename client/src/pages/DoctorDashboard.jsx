@@ -9,7 +9,7 @@ const DoctorDashboard = () => {
 
   const {
     todaysAppointments,
-    pendingCount,
+    confirmedCount,
     completedCount,
     uniquePatientsCount,
     upcomingConsultations
@@ -24,7 +24,7 @@ const DoctorDashboard = () => {
       return d >= todayStart && d < todayEnd;
     });
 
-    const pending = appointments.filter(a => a.status === "Pending").length;
+    const confirmedCount = appointments.filter(a => a.status === "Confirmed").length;
     const completed = appointments.filter(a => a.status === "Completed").length;
     
     // Unique patients handled (based on User ID)
@@ -36,7 +36,7 @@ const DoctorDashboard = () => {
 
     return {
       todaysAppointments: today,
-      pendingCount: pending,
+      confirmedCount,
       completedCount: completed,
       uniquePatientsCount: patientIds.size,
       upcomingConsultations: upcoming
@@ -48,7 +48,7 @@ const DoctorDashboard = () => {
 
   const stats = [
     { label: "Today's Patients", value: todaysAppointments.length, icon: <Users size={24} />, color: "text-blue-400", bg: "bg-blue-400/10" },
-    { label: "Pending Requests", value: pendingCount, icon: <Clock size={24} />, color: "text-amber-400", bg: "bg-amber-400/10" },
+    { label: "Confirmed", value: confirmedCount, icon: <CheckCircle size={24} />, color: "text-sky-400", bg: "bg-sky-400/10" },
     { label: "Total Completed", value: completedCount, icon: <CheckCircle size={24} />, color: "text-emerald-400", bg: "bg-emerald-400/10" },
     { label: "Patients Handled", value: uniquePatientsCount, icon: <UserCheck size={24} />, color: "text-purple-400", bg: "bg-purple-400/10" },
   ];

@@ -220,20 +220,24 @@ const ManageAppointments = () => {
                       <StatusBadge status={appointment.status} />
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <select
-                        value={appointment.status}
-                        onChange={(e) =>
-                          handleStatusUpdate(appointment._id, e.target.value)
-                        }
-                        disabled={updateMutation.isPending}
-                        className="bg-[#111827] border border-gray-700 text-gray-200 text-xs rounded-lg px-3 py-2 outline-none focus:border-emerald-500"
-                      >
-                        {statusOptions.map((status) => (
-                          <option key={status} value={status}>
-                            {status}
+                      {["Completed", "Cancelled"].includes(appointment.status) ? (
+                        <span className="text-xs text-gray-500 italic">No further changes</span>
+                      ) : (
+                        <select
+                          value={appointment.status}
+                          onChange={(e) =>
+                            handleStatusUpdate(appointment._id, e.target.value)
+                          }
+                          disabled={updateMutation.isPending}
+                          className="bg-[#111827] border border-gray-700 text-gray-200 text-xs rounded-lg px-3 py-2 outline-none focus:border-emerald-500"
+                        >
+                          <option value={appointment.status} disabled>
+                            {appointment.status}
                           </option>
-                        ))}
-                      </select>
+                          <option value="Confirmed">Confirm</option>
+                          <option value="Cancelled">Cancel</option>
+                        </select>
+                      )}
                     </td>
                   </tr>
                 ))
