@@ -29,7 +29,7 @@ export const getDoctorAppointments = async (req, res) => {
 
     const appointments = await Appointment.find(query)
       .populate("patientId", "name email") // populate patient info
-      .sort({ appointmentDateTime: 1 }); // upcoming first
+      .sort({ appointmentDateTime: -1 }); // recent first
 
     res.json(appointments);
   } catch (error) {
@@ -272,7 +272,7 @@ export const getMyAppointments = async (req, res) => {
       patientId: req.user._id,
     })
       .populate("doctorId", "name email")
-      .sort({ appointmentDateTime: 1 });
+      .sort({ appointmentDateTime: -1 });
 
     res.json(appointments);
   } catch (error) {

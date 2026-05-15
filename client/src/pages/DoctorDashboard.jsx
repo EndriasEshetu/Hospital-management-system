@@ -19,10 +19,12 @@ const DoctorDashboard = () => {
     const todayEnd = new Date(todayStart);
     todayEnd.setDate(todayEnd.getDate() + 1);
 
-    const today = appointments.filter(appt => {
-      const d = new Date(appt.appointmentDateTime);
-      return d >= todayStart && d < todayEnd;
-    });
+    const today = appointments
+      .filter(appt => {
+        const d = new Date(appt.appointmentDateTime);
+        return d >= todayStart && d < todayEnd;
+      })
+      .sort((a, b) => new Date(a.appointmentDateTime) - new Date(b.appointmentDateTime));
 
     const confirmedCount = appointments.filter(a => a.status === "Confirmed").length;
     const completed = appointments.filter(a => a.status === "Completed").length;
@@ -32,6 +34,7 @@ const DoctorDashboard = () => {
 
     const upcoming = appointments
       .filter(a => new Date(a.appointmentDateTime) > new Date() && a.status === "Confirmed")
+      .sort((a, b) => new Date(a.appointmentDateTime) - new Date(b.appointmentDateTime))
       .slice(0, 5);
 
     return {
