@@ -38,7 +38,7 @@ const AdminLayout = () => {
 
   return (
     <div className="flex min-h-screen bg-[#475a6c] font-sans relative">
-      {/* ── Mobile Overlay ───────────────────────── */}
+      {/* Mobile Overlay  */}
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
@@ -46,7 +46,7 @@ const AdminLayout = () => {
         />
       )}
 
-      {/* ── Sidebar ─────────────────────────────── */}
+      {/*  Sidebar  */}
       <aside
         className={`fixed md:static inset-y-0 left-0 w-72 bg-[#1f2937] shadow-2xl flex flex-col border-r border-gray-800 z-50 transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
@@ -100,7 +100,7 @@ const AdminLayout = () => {
         </div>
       </aside>
 
-      {/* ── Main content ────────────────────────── */}
+      {/*  Main content  */}
       <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
         {/* Mobile Header */}
         <header className="md:hidden bg-[#1f2937] p-4 flex items-center justify-between border-b border-gray-800">

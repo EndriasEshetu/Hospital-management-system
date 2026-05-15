@@ -45,7 +45,7 @@ const Homepage = () => {
                   className="flex items-center gap-2 px-8 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition transform hover:-translate-y-1"
                 >
                   <User size={18} />
-                  Login to Portal
+                  Login
                 </a>
 
                 <a
@@ -53,7 +53,7 @@ const Homepage = () => {
                   className="flex items-center gap-2 px-8 py-4 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg transition transform hover:-translate-y-1"
                 >
                   <CheckCircle size={18} />
-                  Register Now
+                  Register
                 </a>
               </div>
 

@@ -18,13 +18,12 @@ export default function Footer() {
         </p>
 
         <p className="order-3 md:order-2 text-center">
-          &copy; {new Date().getFullYear()} Appointment Management System. All
-          rights reserved.
+          &copy; {new Date().getFullYear()} Hospital Managament System. All rights reserved.
         </p>
 
         <div className="flex gap-6 order-1 md:order-3">
           <a
-            href="https://github.com/EndriasEshetu/Appointment-management-system"
+            href="https://github.com/EndriasEshetu/Hospital-management-system"
             target="_blank"
             rel="noreferrer"
             className="hover:text-white transition font-medium"

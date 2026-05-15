@@ -13,7 +13,7 @@ export default function Navbar() {
             <CalendarIcon className="text-white" size={24} />
           </div>
           <span className="text-xl font-bold text-white tracking-wide">
-            Appointment System
+            Hospital Platform
           </span>
         </div>
 
