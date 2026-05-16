@@ -20,16 +20,31 @@ const app = express();
 // Initialize background jobs
 initCronJobs();
 
+// Configure CORS origins
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "https://hospital-management-system-endrias.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:3000",
+]
+  .filter(Boolean)
+  .map((origin) => origin.replace(/\/$/, "")); // Remove trailing slashes
+
 app.use(
   cors({
-    origin: [
-      process.env.CLIENT_URL,
-      "http://localhost:5173",
-      "http://localhost:3000",
-    ].filter(Boolean),
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
+
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
